@@ -33,6 +33,21 @@ namespace {
             throw ArgumentError(flag + ": not an integer: " + value);
         }
     }
+
+    /// 문자열 전체가 실수인지 확인하고 변환한다. ("1.5x" 같은 값은 거부)
+    double toDouble(const std::string& value, const std::string& flag) {
+        try {
+            std::size_t pos = 0;
+            const double result = std::stod(value, &pos);
+            if (pos != value.size()) {
+                throw ArgumentError(flag + ": not a number: " + value);
+            }
+            return result;
+        }
+        catch (const std::logic_error&) {  // std::invalid_argument, std::out_of_range
+            throw ArgumentError(flag + ": not a number: " + value);
+        }
+    }
 } // anonymous namespace
 
 ProgramOptions CommandLineParser::parse(int argc, char* argv[]) {
@@ -52,6 +67,12 @@ ProgramOptions CommandLineParser::parse(int argc, char* argv[]) {
         }
         else if (arg == "--threshold" || arg == "-t") {
             options.threshold = toInt(nextArg(argc, argv, i, arg), arg);
+        }
+        else if (arg == "--brightness" || arg == "-b") {
+            options.brightness = toInt(nextArg(argc, argv, i, arg), arg);
+        }
+        else if (arg == "--contrast" || arg == "-c") {
+            options.contrast = toDouble(nextArg(argc, argv, i, arg), arg);
         }
         else if (arg == "--help" || arg == "-h") {
             printUsage(argv[0]);
@@ -83,12 +104,15 @@ void CommandLineParser::printUsage(const std::string& exeName) {
         << "Options:\n"
         << "  -i, --input   <path>   Input BMP file (24-bit, uncompressed)\n"
         << "  -o, --output  <path>   Output BMP file\n"
-        << "  -f, --filter  <name>   Filter to apply (grayscale, flip:h, flip:v, threshold)\n"
+        << "  -f, --filter  <name>   Filter to apply (grayscale, flip:h, flip:v, threshold, brightness)\n"
         << "  -t, --threshold <0-255> Threshold value for 'threshold' filter (default 128)\n"
+        << "  -b, --brightness <-255-255> Brightness for 'brightness' filter (default 0)\n"
+        << "  -c, --contrast <0.0-10.0>   Contrast for 'brightness' filter (default 1.0)\n"
         << "  -h, --help             Show this message\n\n"
         << "Examples:\n"
         << "  " << exeName << " -i input.bmp -o result.bmp -f grayscale\n"
-        << "  " << exeName << " -i input.bmp -o result.bmp -f threshold -t 128\n";
+        << "  " << exeName << " -i input.bmp -o result.bmp -f threshold -t 128\n"
+        << "  " << exeName << " -i input.bmp -o result.bmp -f brightness -b 20 -c 1.2\n";
 }
 
 } // namespace ip

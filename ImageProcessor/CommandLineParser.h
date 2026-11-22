@@ -19,6 +19,8 @@ struct ProgramOptions {
     std::string outputPath;  ///< --output / -o
     std::string filterName;  ///< --filter / -f
     int         threshold = 128;  ///< --threshold / -t (threshold 필터의 임계값)
+    int         brightness = 0;   ///< --brightness / -b (brightness 필터의 밝기)
+    double      contrast = 1.0;   ///< --contrast / -c (brightness 필터의 대비)
 };
 
 class CommandLineParser {

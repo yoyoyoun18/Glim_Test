@@ -20,6 +20,7 @@
 #include "filters/GrayscaleFilter.h"
 #include "filters/FlipFilter.h"
 #include "filters/ThresholdFilter.h"
+#include "filters/BrightnessContrastFilter.h"
 
 int main(int argc, char* argv[]) {
     try {
@@ -45,6 +46,10 @@ int main(int argc, char* argv[]) {
         }
         else if (options.filterName == "threshold") {
             ip::ThresholdFilter filter(options.threshold);
+            filter.apply(image);
+        }
+        else if (options.filterName == "brightness") {
+            ip::BrightnessContrastFilter filter(options.brightness, options.contrast);
             filter.apply(image);
         }
         else {
