@@ -18,6 +18,7 @@ struct ProgramOptions {
     std::string inputPath;   ///< --input  / -i
     std::string outputPath;  ///< --output / -o
     std::string filterName;  ///< --filter / -f
+    int         threshold = 128;  ///< --threshold / -t (threshold 필터의 임계값)
 };
 
 class CommandLineParser {

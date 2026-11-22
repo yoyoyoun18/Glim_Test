@@ -18,6 +18,21 @@ namespace {
         }
         return argv[++i];
     }
+
+    /// 문자열 전체가 정수인지 확인하고 변환한다. ("12abc" 같은 값은 거부)
+    int toInt(const std::string& value, const std::string& flag) {
+        try {
+            std::size_t pos = 0;
+            const int result = std::stoi(value, &pos);
+            if (pos != value.size()) {
+                throw ArgumentError(flag + ": not an integer: " + value);
+            }
+            return result;
+        }
+        catch (const std::logic_error&) {  // std::invalid_argument, std::out_of_range
+            throw ArgumentError(flag + ": not an integer: " + value);
+        }
+    }
 } // anonymous namespace
 
 ProgramOptions CommandLineParser::parse(int argc, char* argv[]) {
@@ -34,6 +49,9 @@ ProgramOptions CommandLineParser::parse(int argc, char* argv[]) {
         }
         else if (arg == "--filter" || arg == "-f") {
             options.filterName = nextArg(argc, argv, i, arg);
+        }
+        else if (arg == "--threshold" || arg == "-t") {
+            options.threshold = toInt(nextArg(argc, argv, i, arg), arg);
         }
         else if (arg == "--help" || arg == "-h") {
             printUsage(argv[0]);
@@ -65,11 +83,12 @@ void CommandLineParser::printUsage(const std::string& exeName) {
         << "Options:\n"
         << "  -i, --input   <path>   Input BMP file (24-bit, uncompressed)\n"
         << "  -o, --output  <path>   Output BMP file\n"
-        << "  -f, --filter  <name>   Filter to apply (e.g. grayscale, threshold:128)\n"
+        << "  -f, --filter  <name>   Filter to apply (grayscale, flip:h, flip:v, threshold)\n"
+        << "  -t, --threshold <0-255> Threshold value for 'threshold' filter (default 128)\n"
         << "  -h, --help             Show this message\n\n"
         << "Examples:\n"
         << "  " << exeName << " -i input.bmp -o result.bmp -f grayscale\n"
-        << "  " << exeName << " -i input.bmp -o result.bmp -f threshold:128\n";
+        << "  " << exeName << " -i input.bmp -o result.bmp -f threshold -t 128\n";
 }
 
 } // namespace ip

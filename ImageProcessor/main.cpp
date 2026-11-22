@@ -19,6 +19,7 @@
 
 #include "filters/GrayscaleFilter.h"
 #include "filters/FlipFilter.h"
+#include "filters/ThresholdFilter.h"
 
 int main(int argc, char* argv[]) {
     try {
@@ -40,6 +41,10 @@ int main(int argc, char* argv[]) {
         }
         else if (options.filterName == "flip:v") {
             ip::FlipFilter filter(ip::FlipFilter::Direction::Vertical);
+            filter.apply(image);
+        }
+        else if (options.filterName == "threshold") {
+            ip::ThresholdFilter filter(options.threshold);
             filter.apply(image);
         }
         else {
