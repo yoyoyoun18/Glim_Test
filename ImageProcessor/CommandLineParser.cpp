@@ -74,6 +74,18 @@ ProgramOptions CommandLineParser::parse(int argc, char* argv[]) {
         else if (arg == "--contrast" || arg == "-c") {
             options.contrast = toDouble(nextArg(argc, argv, i, arg), arg);
         }
+        else if (arg == "--x") {
+            options.x = toInt(nextArg(argc, argv, i, arg), arg);
+        }
+        else if (arg == "--y") {
+            options.y = toInt(nextArg(argc, argv, i, arg), arg);
+        }
+        else if (arg == "--width") {
+            options.width = toInt(nextArg(argc, argv, i, arg), arg);
+        }
+        else if (arg == "--height") {
+            options.height = toInt(nextArg(argc, argv, i, arg), arg);
+        }
         else if (arg == "--help" || arg == "-h") {
             printUsage(argv[0]);
             std::exit(0);
@@ -104,15 +116,18 @@ void CommandLineParser::printUsage(const std::string& exeName) {
         << "Options:\n"
         << "  -i, --input   <path>   Input BMP file (24-bit, uncompressed)\n"
         << "  -o, --output  <path>   Output BMP file\n"
-        << "  -f, --filter  <name>   Filter to apply (grayscale, flip:h, flip:v, threshold, brightness)\n"
+        << "  -f, --filter  <name>   Filter to apply (grayscale, flip:h, flip:v, threshold, brightness, crop)\n"
         << "  -t, --threshold <0-255> Threshold value for 'threshold' filter (default 128)\n"
         << "  -b, --brightness <-255-255> Brightness for 'brightness' filter (default 0)\n"
         << "  -c, --contrast <0.0-10.0>   Contrast for 'brightness' filter (default 1.0)\n"
+        << "      --x, --y <int>          Top-left corner for 'crop' filter (default 0, 0)\n"
+        << "      --width, --height <int> Output size for 'crop' filter\n"
         << "  -h, --help             Show this message\n\n"
         << "Examples:\n"
         << "  " << exeName << " -i input.bmp -o result.bmp -f grayscale\n"
         << "  " << exeName << " -i input.bmp -o result.bmp -f threshold -t 128\n"
-        << "  " << exeName << " -i input.bmp -o result.bmp -f brightness -b 20 -c 1.2\n";
+        << "  " << exeName << " -i input.bmp -o result.bmp -f brightness -b 20 -c 1.2\n"
+        << "  " << exeName << " -i input.bmp -o result.bmp -f crop --x 10 --y 20 --width 100 --height 80\n";
 }
 
 } // namespace ip
