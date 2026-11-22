@@ -17,10 +17,7 @@
 
 #include <iostream>
 
- // TODO: 본인이 구현한 필터 헤더를 include 하세요.
- // #include "GrayscaleFilter.h"
- // #include "ThresholdFilter.h"
- // ...
+#include "filters/GrayscaleFilter.h"
 
 int main(int argc, char* argv[]) {
     try {
@@ -31,34 +28,15 @@ int main(int argc, char* argv[]) {
         ip::ImageBuffer image = ip::BmpParser::loadFromFile(options.inputPath);
         std::cout << "Loaded: " << image.width() << " x " << image.height() << "\n";
 
-        // ───────────────────────────────────────────────────────
-        // TODO: options.filterName 에 따라 적절한 필터를 생성하고
-        //       image 에 적용하세요.
-        //
-        //   예시 코드 (참고용):
-        //
-        //     if (options.filterName == "grayscale") {
-        //         GrayscaleFilter filter;
-        //         filter.apply(image);
-        //     }
-        //     else if (options.filterName == "threshold:128") {
-        //         ThresholdFilter filter(128);
-        //         filter.apply(image);
-        //     }
-        //     else {
-        //         throw ip::FilterError("Unknown filter: " + options.filterName);
-        //     }
-        //
-        //   ※ 가산점 항목:
-        //     - 추상 클래스(FilterBase) 기반 다형성 설계
-        //     - 필터 파이프라인 체인 (CLI 옵션 확장 필요)
-        //     - 멀티쓰레드 처리
-        //     - 로그 파일 출력 (CLI 옵션 확장 필요)
-        // ───────────────────────────────────────────────────────
-
-        // ↓ 여기에 필터 적용 코드를 작성하세요.
-
-
+        // ── 필터 적용 ───────────────────────────────────────────
+        if (options.filterName == "grayscale") {
+            ip::GrayscaleFilter filter;
+            filter.apply(image);
+        }
+        else {
+            throw ip::FilterError("Unknown filter: " + options.filterName);
+        }
+        std::cout << "Applied: " << options.filterName << "\n";
 
         // ── BMP 저장 (제공된 코드) ──────────────────────────────
         ip::BmpParser::saveToFile(options.outputPath, image);
