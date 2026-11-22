@@ -93,6 +93,7 @@
     <ClCompile Include="filters\BrightnessContrastFilter.cpp" />
     <ClCompile Include="filters\CropFilter.cpp" />
     <ClCompile Include="filters\ResizeFilter.cpp" />
+    <ClCompile Include="filters\HistogramFilter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Exceptions.h" />
@@ -106,6 +107,7 @@
     <ClInclude Include="filters\BrightnessContrastFilter.h" />
     <ClInclude Include="filters\CropFilter.h" />
     <ClInclude Include="filters\ResizeFilter.h" />
+    <ClInclude Include="filters\HistogramFilter.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>

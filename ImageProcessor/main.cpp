@@ -23,6 +23,7 @@
 #include "filters/BrightnessContrastFilter.h"
 #include "filters/CropFilter.h"
 #include "filters/ResizeFilter.h"
+#include "filters/HistogramFilter.h"
 
 int main(int argc, char* argv[]) {
     try {
@@ -60,6 +61,10 @@ int main(int argc, char* argv[]) {
         }
         else if (options.filterName == "resize") {
             ip::ResizeFilter filter(options.width, options.height);
+            filter.apply(image);
+        }
+        else if (options.filterName == "histogram") {
+            ip::HistogramFilter filter;
             filter.apply(image);
         }
         else {

@@ -116,7 +116,7 @@ void CommandLineParser::printUsage(const std::string& exeName) {
         << "Options:\n"
         << "  -i, --input   <path>   Input BMP file (24-bit, uncompressed)\n"
         << "  -o, --output  <path>   Output BMP file\n"
-        << "  -f, --filter  <name>   Filter to apply (grayscale, flip:h, flip:v, threshold, brightness, crop, resize)\n"
+        << "  -f, --filter  <name>   Filter to apply (grayscale, flip:h, flip:v, threshold, brightness, crop, resize, histogram)\n"
         << "  -t, --threshold <0-255> Threshold value for 'threshold' filter (default 128)\n"
         << "  -b, --brightness <-255-255> Brightness for 'brightness' filter (default 0)\n"
         << "  -c, --contrast <0.0-10.0>   Contrast for 'brightness' filter (default 1.0)\n"
