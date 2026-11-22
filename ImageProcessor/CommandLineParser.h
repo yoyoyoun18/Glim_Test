@@ -23,8 +23,8 @@ struct ProgramOptions {
     double      contrast = 1.0;   ///< --contrast / -c (brightness 필터의 대비)
     int         x = 0;            ///< --x      (crop 시작 x 좌표)
     int         y = 0;            ///< --y      (crop 시작 y 좌표)
-    int         width = 0;        ///< --width  (crop 결과 너비, 0 = 미지정)
-    int         height = 0;       ///< --height (crop 결과 높이, 0 = 미지정)
+    int         width = 0;        ///< --width  (crop/resize 결과 너비, 0 = 미지정)
+    int         height = 0;       ///< --height (crop/resize 결과 높이, 0 = 미지정)
 };
 
 class CommandLineParser {

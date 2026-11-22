@@ -22,6 +22,7 @@
 #include "filters/ThresholdFilter.h"
 #include "filters/BrightnessContrastFilter.h"
 #include "filters/CropFilter.h"
+#include "filters/ResizeFilter.h"
 
 int main(int argc, char* argv[]) {
     try {
@@ -55,6 +56,10 @@ int main(int argc, char* argv[]) {
         }
         else if (options.filterName == "crop") {
             ip::CropFilter filter(options.x, options.y, options.width, options.height);
+            filter.apply(image);
+        }
+        else if (options.filterName == "resize") {
+            ip::ResizeFilter filter(options.width, options.height);
             filter.apply(image);
         }
         else {
