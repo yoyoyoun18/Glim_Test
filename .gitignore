@@ -1,0 +1,27 @@
+# ── Visual Studio ─────────────────────────────
+.vs/
+*.user
+*.suo
+*.VC.db
+*.VC.opendb
+*.sdf
+*.opensdf
+ipch/
+
+# ── 빌드 산출물 ───────────────────────────────
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Ww]in32/
+*.obj
+*.pdb
+*.ilk
+*.idb
+*.iobj
+*.ipdb
+*.tlog
+*.lastbuildstate
+
+# ── 개인 작업 문서 ────────────────────────────
+ai_plan.md
