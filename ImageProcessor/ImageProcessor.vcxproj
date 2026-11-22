@@ -93,6 +93,7 @@
     <ClInclude Include="ImageBuffer.h" />
     <ClInclude Include="BmpParser.h" />
     <ClInclude Include="CommandLineParser.h" />
+    <ClInclude Include="filters\FilterBase.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>
