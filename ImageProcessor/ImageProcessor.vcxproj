@@ -87,6 +87,7 @@
     <ClCompile Include="ImageBuffer.cpp" />
     <ClCompile Include="BmpParser.cpp" />
     <ClCompile Include="CommandLineParser.cpp" />
+    <ClCompile Include="filters\GrayscaleFilter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Exceptions.h" />
@@ -94,6 +95,7 @@
     <ClInclude Include="BmpParser.h" />
     <ClInclude Include="CommandLineParser.h" />
     <ClInclude Include="filters\FilterBase.h" />
+    <ClInclude Include="filters\GrayscaleFilter.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>
