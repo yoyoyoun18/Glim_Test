@@ -18,6 +18,7 @@
 #include <iostream>
 
 #include "filters/GrayscaleFilter.h"
+#include "filters/FlipFilter.h"
 
 int main(int argc, char* argv[]) {
     try {
@@ -31,6 +32,14 @@ int main(int argc, char* argv[]) {
         // ── 필터 적용 ───────────────────────────────────────────
         if (options.filterName == "grayscale") {
             ip::GrayscaleFilter filter;
+            filter.apply(image);
+        }
+        else if (options.filterName == "flip:h") {
+            ip::FlipFilter filter(ip::FlipFilter::Direction::Horizontal);
+            filter.apply(image);
+        }
+        else if (options.filterName == "flip:v") {
+            ip::FlipFilter filter(ip::FlipFilter::Direction::Vertical);
             filter.apply(image);
         }
         else {
