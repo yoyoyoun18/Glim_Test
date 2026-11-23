@@ -17,8 +17,10 @@
 
 #include <iostream>
 #include <memory>
+#include <vector>
 
 #include "pipeline/FilterFactory.h"
+#include "pipeline/PipelineParser.h"
 
 int main(int argc, char* argv[]) {
     try {
@@ -30,8 +32,15 @@ int main(int argc, char* argv[]) {
         std::cout << "Loaded: " << image.width() << " x " << image.height() << "\n";
 
         // ── 필터 적용 ───────────────────────────────────────────
+        // --filter 값도 파이프라인 문법으로 나눈다. (예: "threshold:128" → threshold + {"128"})
+        const std::vector<ip::PipelineStep> steps = ip::PipelineParser::parse(options.filterName);
+        if (steps.size() != 1) {
+            throw ip::ArgumentError("--filter takes a single filter: " + options.filterName);
+        }
+
         const ip::FilterFactory factory;
-        std::unique_ptr<ip::FilterBase> filter = factory.create(options.filterName, options);
+        std::unique_ptr<ip::FilterBase> filter =
+            factory.create(steps[0].name, steps[0].params, options);
         filter->apply(image);
         std::cout << "Applied: " << options.filterName << "\n";
 
