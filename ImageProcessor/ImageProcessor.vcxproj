@@ -96,6 +96,7 @@
     <ClCompile Include="filters\HistogramFilter.cpp" />
     <ClCompile Include="pipeline\FilterFactory.cpp" />
     <ClCompile Include="pipeline\PipelineParser.cpp" />
+    <ClCompile Include="pipeline\Pipeline.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Exceptions.h" />
@@ -112,6 +113,7 @@
     <ClInclude Include="filters\HistogramFilter.h" />
     <ClInclude Include="pipeline\FilterFactory.h" />
     <ClInclude Include="pipeline\PipelineParser.h" />
+    <ClInclude Include="pipeline\Pipeline.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>

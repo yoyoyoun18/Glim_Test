@@ -16,10 +16,10 @@
 #include "Exceptions.h"
 
 #include <iostream>
-#include <memory>
 #include <vector>
 
 #include "pipeline/FilterFactory.h"
+#include "pipeline/Pipeline.h"
 #include "pipeline/PipelineParser.h"
 
 int main(int argc, char* argv[]) {
@@ -38,10 +38,10 @@ int main(int argc, char* argv[]) {
             throw ip::ArgumentError("--filter takes a single filter: " + options.filterName);
         }
 
+        // 단계 하나짜리 파이프라인으로 실행한다.
         const ip::FilterFactory factory;
-        std::unique_ptr<ip::FilterBase> filter =
-            factory.create(steps[0].name, steps[0].params, options);
-        filter->apply(image);
+        const ip::Pipeline pipeline = ip::Pipeline::build(steps, factory, options);
+        pipeline.run(image);
         std::cout << "Applied: " << options.filterName << "\n";
 
         // ── BMP 저장 (제공된 코드) ──────────────────────────────
