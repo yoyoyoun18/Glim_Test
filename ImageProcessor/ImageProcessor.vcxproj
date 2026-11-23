@@ -56,6 +56,10 @@
   <ImportGroup Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
+  <PropertyGroup>
+    <!-- VS 에서 실행(F5)할 때도 솔루션 루트 기준으로 Log 폴더가 생기도록 -->
+    <LocalDebuggerWorkingDirectory>$(SolutionDir)</LocalDebuggerWorkingDirectory>
+  </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -97,6 +101,7 @@
     <ClCompile Include="pipeline\FilterFactory.cpp" />
     <ClCompile Include="pipeline\PipelineParser.cpp" />
     <ClCompile Include="pipeline\Pipeline.cpp" />
+    <ClCompile Include="logging\Logger.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Exceptions.h" />
@@ -114,6 +119,7 @@
     <ClInclude Include="pipeline\FilterFactory.h" />
     <ClInclude Include="pipeline\PipelineParser.h" />
     <ClInclude Include="pipeline\Pipeline.h" />
+    <ClInclude Include="logging\Logger.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>
