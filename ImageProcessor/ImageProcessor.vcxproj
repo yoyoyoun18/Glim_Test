@@ -120,6 +120,7 @@
     <ClInclude Include="pipeline\PipelineParser.h" />
     <ClInclude Include="pipeline\Pipeline.h" />
     <ClInclude Include="logging\Logger.h" />
+    <ClInclude Include="logging\Stopwatch.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>

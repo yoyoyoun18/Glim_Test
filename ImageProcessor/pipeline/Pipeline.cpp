@@ -4,7 +4,9 @@
 
 #include "Pipeline.h"
 #include "../Exceptions.h"
+#include "../logging/Stopwatch.h"
 
+#include <string>
 #include <utility>
 
 namespace ip {
@@ -26,9 +28,22 @@ void Pipeline::add(std::unique_ptr<FilterBase> filter) {
     m_filters.push_back(std::move(filter));
 }
 
-void Pipeline::run(ImageBuffer& image) const {
-    for (const std::unique_ptr<FilterBase>& filter : m_filters) {
-        filter->apply(image);
+void Pipeline::run(ImageBuffer& image, Logger& logger) const {
+    const std::string total = std::to_string(m_filters.size());
+
+    for (std::size_t i = 0; i < m_filters.size(); ++i) {
+        const FilterBase& filter = *m_filters[i];
+        const std::string step = "Step " + std::to_string(i + 1) + "/" + total + " " + filter.name();
+
+        const Stopwatch sw;
+        try {
+            m_filters[i]->apply(image);
+        }
+        catch (...) {
+            logger.error(step + " FAILED (" + sw.elapsedText() + ")");
+            throw;
+        }
+        logger.info(step + " OK (" + sw.elapsedText() + ")");
     }
 }
 

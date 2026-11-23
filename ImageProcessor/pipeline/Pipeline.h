@@ -10,6 +10,7 @@
 #include "../CommandLineParser.h"
 #include "../ImageBuffer.h"
 #include "../filters/FilterBase.h"
+#include "../logging/Logger.h"
 
 #include <cstddef>
 #include <memory>
@@ -42,8 +43,14 @@ public:
     /// 필터를 맨 뒤에 추가한다.
     void add(std::unique_ptr<FilterBase> filter);
 
-    /// 추가된 순서대로 image 에 필터를 적용한다.
-    void run(ImageBuffer& image) const;
+    /**
+     * @brief 추가된 순서대로 image 에 필터를 적용한다.
+     *
+     * 단계마다 필터 이름(파라미터 포함)과 처리 시간, 성공/실패를 로그에 남긴다.
+     *   예: "Step 2/3 brightness:20:1.2 OK (1.2 ms)"
+     * 단계가 실패하면 FAILED 를 남기고 예외를 그대로 다시 던진다.
+     */
+    void run(ImageBuffer& image, Logger& logger) const;
 
     std::size_t size() const { return m_filters.size(); }
 

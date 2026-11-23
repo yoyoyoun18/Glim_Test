@@ -22,15 +22,34 @@
 #include "pipeline/FilterFactory.h"
 #include "pipeline/Pipeline.h"
 #include "pipeline/PipelineParser.h"
+#include "logging/Logger.h"
+#include "logging/Stopwatch.h"
+
+namespace {
+    /// 실패 내용과 종료 코드를 로그에 남기고 종료 코드를 그대로 돌려준다.
+    int logFailure(ip::Logger& logger, const std::string& message, int exitCode) {
+        logger.error(message);
+        logger.error("Result: FAILED (exit code " + std::to_string(exitCode) + ")");
+        return exitCode;
+    }
+}
 
 int main(int argc, char* argv[]) {
+    // 인자 파싱 실패도 기록할 수 있도록 로거는 try 밖에서 먼저 만든다.
+    ip::Logger logger;
+    const ip::Stopwatch totalTime;
+
     try {
         // ── CLI 인자 파싱 (제공된 코드) ─────────────────────────
         const ip::ProgramOptions options = ip::CommandLineParser::parse(argc, argv);
+        logger.info("Start: input=" + options.inputPath + " output=" + options.outputPath);
 
         // ── BMP 로드 (제공된 코드) ──────────────────────────────
+        const ip::Stopwatch loadTime;
         ip::ImageBuffer image = ip::BmpParser::loadFromFile(options.inputPath);
         std::cout << "Loaded: " << image.width() << " x " << image.height() << "\n";
+        logger.info("Loaded: " + std::to_string(image.width()) + " x " +
+                    std::to_string(image.height()) + " (" + loadTime.elapsedText() + ")");
 
         // ── 필터 적용 ───────────────────────────────────────────
         // --filter 는 단계 하나짜리 파이프라인으로 처리한다.
@@ -46,29 +65,33 @@ int main(int argc, char* argv[]) {
 
         const ip::FilterFactory factory;
         const ip::Pipeline pipeline = ip::Pipeline::build(steps, factory, options);
-        pipeline.run(image);
+        pipeline.run(image, logger);
         std::cout << "Applied: " << pipelineText << "\n";
 
         // ── BMP 저장 (제공된 코드) ──────────────────────────────
+        const ip::Stopwatch saveTime;
         ip::BmpParser::saveToFile(options.outputPath, image);
         std::cout << "Saved:  " << options.outputPath << "\n";
+        logger.info("Saved: " + options.outputPath + " (" + saveTime.elapsedText() + ")");
+
+        logger.info("Result: SUCCESS (total " + totalTime.elapsedText() + ")");
         return 0;
     }
     catch (const ip::ArgumentError& e) {
         std::cerr << e.what() << "\n\n";
         ip::CommandLineParser::printUsage(argc > 0 ? argv[0] : "ImageProcessor");
-        return 4;
+        return logFailure(logger, e.what(), 4);
     }
     catch (const ip::BmpParseError& e) {
         std::cerr << e.what() << std::endl;
-        return 2;
+        return logFailure(logger, e.what(), 2);
     }
     catch (const ip::FilterError& e) {
         std::cerr << e.what() << std::endl;
-        return 3;
+        return logFailure(logger, e.what(), 3);
     }
     catch (const std::exception& e) {
         std::cerr << "Unexpected error: " << e.what() << std::endl;
-        return 1;
+        return logFailure(logger, std::string("Unexpected error: ") + e.what(), 1);
     }
 }
