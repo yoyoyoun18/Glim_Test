@@ -4,9 +4,7 @@
  * @file CommandLineParser.h
  * @brief 커맨드라인 인자 파싱.
  *
- * 본 클래스는 기본 옵션(--input, --output, --filter)만 파싱한다.
- * 고급 옵션(--pipeline, --threads, --log 등)을 추가하려면
- * 본 클래스를 확장하거나 ProgramOptions 에 필드를 추가하라.
+ * 기본 옵션(--input, --output, --filter), 필터 파라미터 옵션, --pipeline 을 파싱한다.
  */
 
 #include <string>
@@ -18,6 +16,7 @@ struct ProgramOptions {
     std::string inputPath;   ///< --input  / -i
     std::string outputPath;  ///< --output / -o
     std::string filterName;  ///< --filter / -f
+    std::string pipeline;    ///< --pipeline / -p (예: "grayscale, threshold:128"). --filter 와 둘 중 하나만 사용
     int         threshold = 128;  ///< --threshold / -t (threshold 필터의 임계값)
     int         brightness = 0;   ///< --brightness / -b (brightness 필터의 밝기)
     double      contrast = 1.0;   ///< --contrast / -c (brightness 필터의 대비)

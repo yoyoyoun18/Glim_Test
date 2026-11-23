@@ -65,6 +65,9 @@ ProgramOptions CommandLineParser::parse(int argc, char* argv[]) {
         else if (arg == "--filter" || arg == "-f") {
             options.filterName = nextArg(argc, argv, i, arg);
         }
+        else if (arg == "--pipeline" || arg == "-p") {
+            options.pipeline = nextArg(argc, argv, i, arg);
+        }
         else if (arg == "--threshold" || arg == "-t") {
             options.threshold = toInt(nextArg(argc, argv, i, arg), arg);
         }
@@ -102,8 +105,14 @@ ProgramOptions CommandLineParser::parse(int argc, char* argv[]) {
     if (options.outputPath.empty()) {
         throw ArgumentError("--output is required");
     }
-    if (options.filterName.empty()) {
-        throw ArgumentError("--filter is required");
+    // --filter 와 --pipeline 은 둘 중 하나만 필수
+    const bool hasFilter = !options.filterName.empty();
+    const bool hasPipeline = !options.pipeline.empty();
+    if (!hasFilter && !hasPipeline) {
+        throw ArgumentError("--filter or --pipeline is required");
+    }
+    if (hasFilter && hasPipeline) {
+        throw ArgumentError("--filter and --pipeline cannot be used together");
     }
 
     return options;
@@ -112,11 +121,15 @@ ProgramOptions CommandLineParser::parse(int argc, char* argv[]) {
 void CommandLineParser::printUsage(const std::string& exeName) {
     std::cout
         << "Usage:\n"
-        << "  " << exeName << " --input <path> --output <path> --filter <name>\n\n"
+        << "  " << exeName << " --input <path> --output <path> --filter <name>\n"
+        << "  " << exeName << " --input <path> --output <path> --pipeline \"<name>, <name>, ...\"\n\n"
         << "Options:\n"
         << "  -i, --input   <path>   Input BMP file (24-bit, uncompressed)\n"
         << "  -o, --output  <path>   Output BMP file\n"
         << "  -f, --filter  <name>   Filter to apply (grayscale, flip:h, flip:v, threshold, brightness, crop, resize, histogram)\n"
+        << "  -p, --pipeline <list>  Filters to apply in order, separated by ','\n"
+        << "                         Parameters follow the name with ':' (threshold:128, brightness:20:1.2,\n"
+        << "                         crop:x:y:w:h, resize:w:h). Use either --filter or --pipeline.\n"
         << "  -t, --threshold <0-255> Threshold value for 'threshold' filter (default 128)\n"
         << "  -b, --brightness <-255-255> Brightness for 'brightness' filter (default 0)\n"
         << "  -c, --contrast <0.0-10.0>   Contrast for 'brightness' filter (default 1.0)\n"
@@ -128,7 +141,8 @@ void CommandLineParser::printUsage(const std::string& exeName) {
         << "  " << exeName << " -i input.bmp -o result.bmp -f threshold -t 128\n"
         << "  " << exeName << " -i input.bmp -o result.bmp -f brightness -b 20 -c 1.2\n"
         << "  " << exeName << " -i input.bmp -o result.bmp -f crop --x 10 --y 20 --width 100 --height 80\n"
-        << "  " << exeName << " -i input.bmp -o result.bmp -f resize --width 200 --height 150\n";
+        << "  " << exeName << " -i input.bmp -o result.bmp -f resize --width 200 --height 150\n"
+        << "  " << exeName << " -i input.bmp -o result.bmp -p \"grayscale, brightness:20:1.2, threshold:128\"\n";
 }
 
 } // namespace ip

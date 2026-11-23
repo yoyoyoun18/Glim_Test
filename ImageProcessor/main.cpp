@@ -16,6 +16,7 @@
 #include "Exceptions.h"
 
 #include <iostream>
+#include <string>
 #include <vector>
 
 #include "pipeline/FilterFactory.h"
@@ -32,17 +33,21 @@ int main(int argc, char* argv[]) {
         std::cout << "Loaded: " << image.width() << " x " << image.height() << "\n";
 
         // ── 필터 적용 ───────────────────────────────────────────
-        // --filter 값도 파이프라인 문법으로 나눈다. (예: "threshold:128" → threshold + {"128"})
-        const std::vector<ip::PipelineStep> steps = ip::PipelineParser::parse(options.filterName);
-        if (steps.size() != 1) {
-            throw ip::ArgumentError("--filter takes a single filter: " + options.filterName);
+        // --filter 는 단계 하나짜리 파이프라인으로 처리한다.
+        // (예: "threshold:128" → threshold + {"128"})
+        const bool usePipeline = !options.pipeline.empty();
+        const std::string& pipelineText = usePipeline ? options.pipeline : options.filterName;
+
+        const std::vector<ip::PipelineStep> steps = ip::PipelineParser::parse(pipelineText);
+        if (!usePipeline && steps.size() != 1) {
+            throw ip::ArgumentError("--filter takes a single filter (use --pipeline for several): " +
+                                    options.filterName);
         }
 
-        // 단계 하나짜리 파이프라인으로 실행한다.
         const ip::FilterFactory factory;
         const ip::Pipeline pipeline = ip::Pipeline::build(steps, factory, options);
         pipeline.run(image);
-        std::cout << "Applied: " << options.filterName << "\n";
+        std::cout << "Applied: " << pipelineText << "\n";
 
         // ── BMP 저장 (제공된 코드) ──────────────────────────────
         ip::BmpParser::saveToFile(options.outputPath, image);
