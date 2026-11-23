@@ -16,14 +16,9 @@
 #include "Exceptions.h"
 
 #include <iostream>
+#include <memory>
 
-#include "filters/GrayscaleFilter.h"
-#include "filters/FlipFilter.h"
-#include "filters/ThresholdFilter.h"
-#include "filters/BrightnessContrastFilter.h"
-#include "filters/CropFilter.h"
-#include "filters/ResizeFilter.h"
-#include "filters/HistogramFilter.h"
+#include "pipeline/FilterFactory.h"
 
 int main(int argc, char* argv[]) {
     try {
@@ -35,41 +30,9 @@ int main(int argc, char* argv[]) {
         std::cout << "Loaded: " << image.width() << " x " << image.height() << "\n";
 
         // ── 필터 적용 ───────────────────────────────────────────
-        if (options.filterName == "grayscale") {
-            ip::GrayscaleFilter filter;
-            filter.apply(image);
-        }
-        else if (options.filterName == "flip:h") {
-            ip::FlipFilter filter(ip::FlipFilter::Direction::Horizontal);
-            filter.apply(image);
-        }
-        else if (options.filterName == "flip:v") {
-            ip::FlipFilter filter(ip::FlipFilter::Direction::Vertical);
-            filter.apply(image);
-        }
-        else if (options.filterName == "threshold") {
-            ip::ThresholdFilter filter(options.threshold);
-            filter.apply(image);
-        }
-        else if (options.filterName == "brightness") {
-            ip::BrightnessContrastFilter filter(options.brightness, options.contrast);
-            filter.apply(image);
-        }
-        else if (options.filterName == "crop") {
-            ip::CropFilter filter(options.x, options.y, options.width, options.height);
-            filter.apply(image);
-        }
-        else if (options.filterName == "resize") {
-            ip::ResizeFilter filter(options.width, options.height);
-            filter.apply(image);
-        }
-        else if (options.filterName == "histogram") {
-            ip::HistogramFilter filter;
-            filter.apply(image);
-        }
-        else {
-            throw ip::FilterError("Unknown filter: " + options.filterName);
-        }
+        const ip::FilterFactory factory;
+        std::unique_ptr<ip::FilterBase> filter = factory.create(options.filterName, options);
+        filter->apply(image);
         std::cout << "Applied: " << options.filterName << "\n";
 
         // ── BMP 저장 (제공된 코드) ──────────────────────────────
